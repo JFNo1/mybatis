@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--指定properties文件的位置，从类路径根开始找文件-->
+    <properties resource="jdbc.properties"/>
+    <!--settings：控制mybatis全局行为-->
+   <!-- <settings>
+        &lt;!&ndash;设置mybatis输出日志&ndash;&gt;
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>-->
+    <!--定义别名-->
+    <typeAliases>
+        <!--
+                第一种方式
+                可以指定一个类型一个自定义别名
+                type:自定义类型的全限定名称
+                alias：别名（短小，容易记忆的）
+         -->
+        <!--<typeAlias type="com.panjunfeng.domain.Student" alias="stu"/>
+        <typeAlias type="com.panjunfeng.vo.ViewStudent" alias="vstu"/>-->
+        <!--
+                第二种方式
+                <package> name是包名，这个包中的所有类的类名就是别名（类名不区分大小写）
+        -->
+        <package name="com.panjunfeng.domain"/>
+    </typeAliases>
+    <!--注册自定义类型处理器-->
+    <typeHandlers>
+        <typeHandler handler="com.panjunfeng.handler.DateTypeHandler"/>
+    </typeHandlers>
+    <!--配置插件-->
+  <!--  <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"/>
+    </plugins>-->
+    <!--环境配置： 数据库的连接信息
+        default:必须和某个environment的id值一样。
+        告诉mybatis使用哪个数据库的连接信息。也就是访问哪个数据库
+    -->
+    <environments default="development">
+
+        <!-- environment : 一个数据库信息的配置， 环境
+             id:一个唯一值，自定义，表示环境的名称。
+        -->
+        <environment id="development">
+            <!--
+               transactionManager ：mybatis的事务类型
+                   type: JDBC(表示使用jdbc中的Connection对象的commit，rollback做事务处理)
+            -->
+            <!--
+             transactionManager:mybatis提交事务，回顾事务的方式
+                type: 事务的处理的类型
+                    1）JDBC : 表示mybatis底层是调用JDBC中的Connection对象的，commit， rollback
+                    2）MANAGED : 把mybatis的事务处理委托给其它的容器（一个服务器软件，一个框架（spring））
+           -->
+            <transactionManager type="JDBC"/>
+            <!--
+               dataSource:表示数据源，java体系中，规定实现了javax.sql.DataSource接口的都是数据源。
+                          数据源表示Connection对象的。
+
+               type:指定数据源的类型
+                  1）POOLED: 使用连接池， mybatis会创建PooledDataSource类
+                  2）UPOOLED: 不使用连接池， 在每次执行sql语句，先创建连接，执行sql，在关闭连接
+                              mybatis会创建一个UnPooledDataSource，管理Connection对象的使用
+                  3）JNDI：java命名和目录服务（windows注册表）
+            -->
+            <!--
+               dataSource:表示数据源，连接数据库的
+                  type：表示数据源的类型， POOLED表示使用连接池
+            -->
+            <dataSource type="POOLED">
+                <!--
+                   driver, url, username, password 是固定的，不能自定义。
+                -->
+                <!--数据库的驱动类名-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <!--连接数据库的url字符串-->
+                <property name="url" value="${jdbc.url}"/>
+                <!--访问数据库的用户名-->
+                <property name="username" value="${jdbc.username}"/>
+                <!--密码-->
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+
+    <!-- sql mapper(sql映射文件)的位置-->
+   <mappers>
+       <package name="com.panjunfeng.dao"/>
+   </mappers>
+</configuration>
+     
